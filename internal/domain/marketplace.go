@@ -14,6 +14,11 @@ type Marketplace interface {
 	GetOffer(ctx context.Context, externalID string) (Offer, error)
 }
 
+// LinkResolver recognizes canonical product links without fetching user URLs.
+type LinkResolver interface {
+	ResolveLink(rawURL string) (externalID string, ok bool)
+}
+
 // Offer is a normalized offer returned by a marketplace.
 // PriceMinor is stored in the smallest unit of Currency (kopecks for RUB).
 type Offer struct {
@@ -24,4 +29,7 @@ type Offer struct {
 	Currency    string    `json:"currency"`
 	Available   bool      `json:"available"`
 	CollectedAt time.Time `json:"collected_at"`
+	// Context describes price conditions and any unverified identity dimensions.
+	// Anonymous public pages do not guarantee a fixed seller or delivery region.
+	Context string `json:"context"`
 }

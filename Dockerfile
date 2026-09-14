@@ -6,7 +6,7 @@ WORKDIR /src
 RUN apk add --no-cache ca-certificates
 
 # Dependencies are copied separately so their layer is cached between source changes.
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
