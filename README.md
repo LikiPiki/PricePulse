@@ -17,7 +17,7 @@ docker compose up --build api
 docker compose --profile worker run --rm worker
 ```
 
-`Dockerfile` собирает два минимальных образа из одного build stage: `api` и `worker`. В GitHub Actions workflow [ci.yml](.github/workflows/ci.yml) запускает `go vet`, тесты и проверяет сборку обоих образов на каждом pull request и push в `main`.
+`Dockerfile` собирает статические Go-бинарники в Alpine и помещает их в отдельные минимальные `scratch`-образы: `api` и `worker`. В них также есть CA-сертификаты для HTTPS-запросов будущих адаптеров. В GitHub Actions workflow [ci.yml](.github/workflows/ci.yml) запускает `go vet`, тесты и проверяет сборку обоих образов на каждом pull request и push в `main`.
 
 Проверка API:
 
