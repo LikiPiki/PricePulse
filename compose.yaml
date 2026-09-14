@@ -1,0 +1,13 @@
+services:
+  api:
+    build:
+      context: .
+      target: api
+    ports:
+      - "8080:8080"
+
+  worker:
+    build:
+      context: .
+      target: worker
+    profiles: ["worker"]
