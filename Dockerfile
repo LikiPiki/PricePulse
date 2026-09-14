@@ -11,7 +11,18 @@ RUN go mod download
 
 COPY . .
 RUN CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/api ./cmd/api && \
-    CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/worker ./cmd/worker
+    CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/worker ./cmd/worker && \
+    CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/inspect ./cmd/inspect
+
+# Browser experiments are isolated from the small API/worker runtime images.
+FROM alpine:3.22 AS browser
+RUN apk add --no-cache chromium ca-certificates font-noto tini && \
+    addgroup -g 65532 pricepulse && \
+    adduser -D -u 65532 -G pricepulse pricepulse
+COPY --from=build /out/inspect /app/inspect
+USER 65532:65532
+WORKDIR /home/pricepulse
+ENTRYPOINT ["/sbin/tini", "--", "/app/inspect", "-browser", "-headless", "-chrome", "/usr/bin/chromium"]
 
 FROM scratch AS api
 COPY --from=build /out/api /app/api

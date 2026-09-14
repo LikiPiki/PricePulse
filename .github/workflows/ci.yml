@@ -40,3 +40,9 @@ jobs:
           target: worker
           push: false
           tags: pricepulse-worker:ci
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: browser
+          push: false
+          tags: pricepulse-browser:ci

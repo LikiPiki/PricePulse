@@ -11,3 +11,11 @@ services:
       context: .
       target: worker
     profiles: ["worker"]
+
+  browser:
+    build:
+      context: .
+      target: browser
+    profiles: ["browser"]
+    shm_size: "256mb"
+    command: ["-url", "https://www.ozon.ru/product/1463825680/"]
