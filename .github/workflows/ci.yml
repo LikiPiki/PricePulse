@@ -10,14 +10,13 @@ permissions:
 
 jobs:
   test:
-    name: Test Go code
-    runs-on: ubuntu-slim
+    name: Test Go code (Alpine)
+    # GitHub has no hosted Alpine runner. This executes all Go commands inside
+    # the official Alpine-based Go image; runs-on only selects its host runner.
+    runs-on: ubuntu-24.04
+    container: golang:1.24-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "1.24.0"
-          cache: true
       - run: go vet ./...
       - run: go test ./...
 
